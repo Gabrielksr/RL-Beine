@@ -1,0 +1,36 @@
+Ab 5. Oktober
+    Einstieg in Reinforcement Learning
+        - Tabellarisches Q-Learning im Notebook ausprobiert (first-tests.ipynb)
+        - Q-Learning auf CartPole-v1 angewendet, Q-Tables gespeichert
+    PPO besser kennenlernen und mit Ant-v5 (MuJoCo) Modelle trainieren
+        - Stable-Baselines3 PPO, Beobachtungen und Rewards mit VecNormalize normalisiert
+    Ein paar Beispiele machen Videos und mit Tensorboard
+        
+
+Ab 20. Oktober
+    Weights und Physik auf die Ant-v5 bringen (Vorbereitung auf den echten Roboter)
+    Spot Micro Teile bestellen und Teile drucken
+        - Teileliste erstellen (Servos, Raspberry Pi, IMU, Akku, Servo-Treiber)
+        - Gehäuse- und Beinteile 3D-drucken
+    Ein paar Beispiele machen Videos
+        - Videos der robusteren Modelle zum Vergleich mit den bisherigen
+
+Ab 27. Oktober bis Termin 20.11.2026
+    Spot Micro in der Simulation trainieren und konfigurieren
+        - Spot-Micro-Modell (URDF/MJCF) in MuJoCo laden
+        - Gelenkgrenzen, Massen und Servo-Werte an den echten Roboter anpassen
+        - Bestes Setup aus den Ant-Versuchen übernehmen (PPO, Cosinus-Decay, Wrapper)
+    Spot Micro zusammenstellen
+        - Mechanik zusammenbauen, Servos verkabeln und kalibrieren
+        - Raspberry Pi einrichten und Servos einzeln ansteuern
+    Sim-to-Real: trainierte Policy auf den echten Spot Micro übertragen
+        - Policy auf dem Raspberry Pi ausführen, Sensorwerte (IMU, Servo-Positionen) wie in der Simulation aufbereiten
+        - Erste Laufversuche, Unterschiede zur Simulation notieren und Simulation bei Bedarf nachjustieren
+    Schriftlichen Teil der Arbeit anfangen
+        - Grundlagen: Reinforcement Learning, Q-Learning, PPO
+        - Versuche und Ergebnisse der Ant-Läufe mit Tabellen und Diagrammen
+
+Ab Termin 20.11.2026
+    Arbeit fertigstellen
+        - Ergebnisse aus Simulation und echtem Roboter vergleichen
+        - Fazit und Ausblick, Korrekturlesen, Abgabe
