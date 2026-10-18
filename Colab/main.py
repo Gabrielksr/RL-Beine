@@ -2,7 +2,7 @@ import os
 import torch
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
-from stable_baselines3.common.vec_env import SubprocVecEnv
+from stable_baselines3.common.vec_env import SubprocVecEnv, VecNormalize
 import webbrowser
 from tensorboard import program
 import random
@@ -10,9 +10,17 @@ from datetime import datetime
 
 
 MODELS = r"C:\Users\gfock\Documents\VSC\RL\Colab\Models"
+ENVS   = r"C:\Users\gfock\Documents\VSC\RL\Colab\Environements"
 LOGS   = r"C:\Users\gfock\Documents\VSC\RL\Colab\logs"
 os.makedirs(MODELS, exist_ok=True)
+os.makedirs(ENVS, exist_ok=True)
 os.makedirs(LOGS, exist_ok=True)
+
+#linearer decay
+def linear_schedule(start_lr, end_lr=1e-5):
+    def lr(progress_remaining):
+        return end_lr + progress_remaining * (start_lr - end_lr)
+    return lr
 
 
 if __name__ == "__main__":
@@ -28,8 +36,10 @@ if __name__ == "__main__":
 
 
     env = make_vec_env("Ant-v5", n_envs=N_ENVS, vec_env_cls=SubprocVecEnv)
+    env = VecNormalize(env, norm_obs=True, norm_reward=True)
 
     model = PPO("MlpPolicy",env,
+                learning_rate=linear_schedule(3e-4),
                 verbose=1,
                 device="cpu", 
                 n_steps=512,
@@ -44,8 +54,9 @@ if __name__ == "__main__":
     print("TensorBoard running at", url)
     webbrowser.open(url)          
 
-    model.learn(total_timesteps=14_000_000, tb_log_name=LOG_NAME, log_interval=1)
+    model.learn(total_timesteps=10_000_000, tb_log_name=LOG_NAME, log_interval=1)
 
 
     model.save(os.path.join(MODELS, NAME))
-    print("Gespeichert in", MODELS)
+    env.save(os.path.join(ENVS, NAME + "_vecnormalize.pkl"))
+    print("Gespeichert in", MODELS, "und", ENVS)
