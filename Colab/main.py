@@ -7,6 +7,7 @@ import webbrowser
 from tensorboard import program
 import random
 from datetime import datetime
+import math
 
 
 MODELS = r"C:\Users\gfock\Documents\VSC\RL\Colab\Models"
@@ -20,6 +21,13 @@ os.makedirs(LOGS, exist_ok=True)
 def linear_schedule(start_lr, end_lr=1e-5):
     def lr(progress_remaining):
         return end_lr + progress_remaining * (start_lr - end_lr)
+    return lr
+
+#cos decay
+def cosine_schedule(start_lr, end_lr=1e-5):
+    def lr(progress_remaining):
+        progress = 1 - progress_remaining
+        return end_lr + 0.5 * (start_lr - end_lr) * (1 + math.cos(math.pi * progress))
     return lr
 
 
@@ -39,7 +47,7 @@ if __name__ == "__main__":
     env = VecNormalize(env, norm_obs=True, norm_reward=True)
 
     model = PPO("MlpPolicy",env,
-                learning_rate=linear_schedule(3e-4),
+                learning_rate=cosine_schedule(3e-4),
                 verbose=1,
                 device="cpu", 
                 n_steps=512,
