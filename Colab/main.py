@@ -47,7 +47,7 @@ if __name__ == "__main__":
     env = VecNormalize(env, norm_obs=True, norm_reward=True)
 
     model = PPO("MlpPolicy",env,
-                learning_rate=3e-4,
+                learning_rate=linear_schedule(3e-4),
                 policy_kwargs=dict(net_arch=dict(pi=[256,256], vf=[256, 256])),
                 verbose=1,
                 device="cpu", 
