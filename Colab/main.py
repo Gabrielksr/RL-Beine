@@ -8,6 +8,7 @@ from tensorboard import program
 import random
 from datetime import datetime
 import math
+from ant_wrappers import make_robot_ant
 
 
 MODELS = r"C:\Users\gfock\Documents\VSC\RL\Colab\Models"
@@ -43,7 +44,14 @@ if __name__ == "__main__":
     # seed= random.randint(0,3)
 
 
-    env = make_vec_env("Ant-v5", n_envs=N_ENVS, vec_env_cls=SubprocVecEnv)
+    env = make_vec_env(make_robot_ant, n_envs=N_ENVS, vec_env_cls=SubprocVecEnv,env_kwargs=dict(heavy=1.3,          # 30 % schwerer
+                       weak=0.8,           # Motoren nur 80 % Kraft
+                       random_physics=True,# Masse/Reibung/Motor zufällig pro Episode
+                       speed_limit=0.3,    # kleiner = trägere Servos = schwerer
+                       delay=2,            # 2 Schritte = 100 ms Verzögerung
+                       noise=0.05,         # mehr Sensorrauschen
+                       push=True,          # zufällige Stösse
+                   ))
     env = VecNormalize(env, norm_obs=True, norm_reward=True)
 
     model = PPO("MlpPolicy",env,
