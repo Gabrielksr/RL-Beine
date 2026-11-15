@@ -1,0 +1,11 @@
+modell;algo;seed;episode;modus;schritte;return_;distanz_m;gefallen;video
+09_gogogaga;PPO;0;1;det;9;1.7;0.14;True;C:\Users\gfock\Documents\VSC\RL\Colab\videos\09_gogogaga\09_gogogaga_seed0_det.mp4
+09_gogogaga;PPO;1;1;det;340;346.74;17.67;True;C:\Users\gfock\Documents\VSC\RL\Colab\videos\09_gogogaga\09_gogogaga_seed1_det.mp4
+09_gogogaga;PPO;2;1;det;203;148.1;7.715;True;C:\Users\gfock\Documents\VSC\RL\Colab\videos\09_gogogaga\09_gogogaga_seed2_det.mp4
+09_gogogaga;PPO;3;1;det;1000;769.28;35.061;False;C:\Users\gfock\Documents\VSC\RL\Colab\videos\09_gogogaga\09_gogogaga_seed3_det.mp4
+09_gogogaga;PPO;4;1;det;1000;431.35;17.803;False;C:\Users\gfock\Documents\VSC\RL\Colab\videos\09_gogogaga\09_gogogaga_seed4_det.mp4
+10_gogogaga;PPO;0;1;det;1000;1072.24;54.487;False;C:\Users\gfock\Documents\VSC\RL\Colab\videos\10_gogogaga\10_gogogaga_seed0_det.mp4
+10_gogogaga;PPO;1;1;det;764;761.22;38.419;True;C:\Users\gfock\Documents\VSC\RL\Colab\videos\10_gogogaga\10_gogogaga_seed1_det.mp4
+10_gogogaga;PPO;2;1;det;1000;411.44;3.152;False;C:\Users\gfock\Documents\VSC\RL\Colab\videos\10_gogogaga\10_gogogaga_seed2_det.mp4
+10_gogogaga;PPO;3;1;det;1000;1096.29;55.115;False;C:\Users\gfock\Documents\VSC\RL\Colab\videos\10_gogogaga\10_gogogaga_seed3_det.mp4
+10_gogogaga;PPO;4;1;det;1000;871.3;44.536;False;C:\Users\gfock\Documents\VSC\RL\Colab\videos\10_gogogaga\10_gogogaga_seed4_det.mp4

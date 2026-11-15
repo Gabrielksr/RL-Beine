@@ -1,5 +1,5 @@
-#Videos aufnehmen von Claude
-"""
+
+"""                     Videos aufnehmen - von CLAUDE!
 videos_aufnehmen.py  -  Nimmt Videos von trainierten Stable-Baselines3-Modellen auf.
 
 Funktioniert mit jedem Modell in Models/ und jedem Seed:

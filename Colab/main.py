@@ -8,12 +8,14 @@ from tensorboard import program
 import random
 from datetime import datetime
 import math
-from ant_wrappers import make_robot_ant
+
 
 
 MODELS = r"C:\Users\gfock\Documents\VSC\RL\Colab\Models"
 ENVS   = r"C:\Users\gfock\Documents\VSC\RL\Colab\Environements"
+ENVS_WR_KWARGS = r"C:\Users\gfock\Documents\VSC\RL\Colab\ENVS_SETTINGS"
 LOGS   = r"C:\Users\gfock\Documents\VSC\RL\Colab\logs"
+os.makedirs(ENVS_WR_KWARGS, exist_ok=True)
 os.makedirs(MODELS, exist_ok=True)
 os.makedirs(ENVS, exist_ok=True)
 os.makedirs(LOGS, exist_ok=True)
@@ -30,39 +32,67 @@ def cosine_schedule(start_lr, end_lr=1e-5):
         progress = 1 - progress_remaining
         return end_lr + 0.5 * (start_lr - end_lr) * (1 + math.cos(math.pi * progress))
     return lr
-
+#
 
 if __name__ == "__main__":
     torch.set_num_threads(1)
     N_ENVS = 14
+
     # fortlaufende Nummer vorne, damit neuere Läufe im Ordner immer weiter unten stehen von Claude
     nummern = [int(f.split("_")[0]) for f in os.listdir(MODELS) if f.split("_")[0].isdigit()]
-    NAME = f"{max(nummern, default=0) + 1:02d}_" + (input("Speichername: ").strip() or f"lauf_C_{N_ENVS}envs")
-    print("Speichere als", NAME)
-    # Datum+Uhrzeit vorne, damit die Logs chronologisch von Claude
-    LOG_NAME = f"{datetime.now():%Y-%m-%d_%H-%M}_{NAME}"
-    # seed= random.randint(0,3)
 
+    Tunen = input('Möchtest du Tunen gabagoo (y/n)')
+    if Tunen == 'y':
+        for e in sorted(os.listdir(MODELS)):
+                print(e)
+        # Von Claude #
+        MODEL = input("Welches Modell möchtest du tunen gabagoo: ").strip().removesuffix(".zip")
+        teile = MODEL.split("_", 1)
+        basis = teile[1] if len(teile) == 2 and teile[0].isdigit() else MODEL
+        NAME = f"{max(nummern, default=0) + 1:02d}_" + (basis or f"lauf_C_{N_ENVS}envs")
+        print("Speichere als", NAME)
+        # ---------- # 
 
-    env = make_vec_env(make_robot_ant, n_envs=N_ENVS, vec_env_cls=SubprocVecEnv,env_kwargs=dict(heavy=1.3,          # 30 % schwerer
-                       weak=0.8,           # Motoren nur 80 % Kraft
-                       random_physics=True,# Masse/Reibung/Motor zufällig pro Episode
-                       speed_limit=0.3,    # kleiner = trägere Servos = schwerer
-                       delay=2,            # 2 Schritte = 100 ms Verzögerung
-                       noise=0.05,         # mehr Sensorrauschen
-                       push=True,          # zufällige Stösse
-                   ))
+    if Tunen == 'n':
+        # Von Claude #
+        NAME = f"{max(nummern, default=0) + 1:02d}_" + (input("Speichername: ").strip() or f"lauf_C_{N_ENVS}envs")
+        print("Speichere als", NAME)
+        LOG_NAME = f"{datetime.now():%Y-%m-%d_%H-%M}_{NAME}"
+        
+        # ---------- #
+    
+    env = make_vec_env("Ant-v5", n_envs=N_ENVS, vec_env_cls=SubprocVecEnv)
     env = VecNormalize(env, norm_obs=True, norm_reward=True)
 
-    model = PPO("MlpPolicy",env,
-                learning_rate=linear_schedule(3e-4),
-                policy_kwargs=dict(net_arch=dict(pi=[256,256], vf=[256, 256])),
-                verbose=1,
-                device="cpu", 
-                n_steps=512,
-                batch_size= 64,
-                target_kl=0.03,
-                tensorboard_log=LOGS)
+    
+    LOG_NAME = f"{datetime.now():%Y-%m-%d_%H-%M}_{NAME}"
+
+    if Tunen == 'y':     #                     tuning
+        model = PPO.load(
+                os.path.join(MODELS,MODEL),env=env,
+                device="cpu",
+                tensorboard_log=LOGS,
+                custom_objects={"learning_rate": linear_schedule(1e-4),
+                                "target_kl": 0.02,
+                                "clip_range":0.1
+                },
+                target_kl= 0.03)
+        
+
+    if Tunen == 'n':        #                   no tuning
+         model = PPO("MlpPolicy",env,
+                        learning_rate=linear_schedule(3e-4), 
+                        target_kl=0.03,
+                        clip_range= linear_schedule(0.2, 0.1),
+                        policy_kwargs=dict(net_arch=dict(pi=[256,256], vf=[256, 256])),
+                        ent_coef=0.001,
+                        n_steps=2048,
+                        batch_size= 512,
+                        tensorboard_log=LOGS,
+                        verbose=1,
+                        device="cpu" )
+
+  
 
     #Tensorboard
     tb = program.TensorBoard()
